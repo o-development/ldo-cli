@@ -1,3 +1,5 @@
+ldo-cli / [Exports](modules.md)
+
 # LDO-CLI
 
 A command line interface for Linked Data Objects. LDO-CLI builds `.shex` shapes into LDO types.

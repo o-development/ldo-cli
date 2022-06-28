@@ -4,6 +4,7 @@ import { Schema } from "shexj";
 import parser from "@shexjs/parser";
 import shexjToTypeAndContext from "shexj2typeandcontext";
 import { renderFile } from "ejs";
+import prettier from "prettier";
 
 interface BuildOptions {
   input: string;
@@ -38,19 +39,25 @@ export async function build(options: BuildOptions) {
         .parse(shexC);
       // Convert the content to types
       const [typings, context] = await shexjToTypeAndContext(schema);
-      const finalContent = await renderFile(
-        path.join(__dirname, "buildOutput.ejs"),
-        {
-          typings,
-          fileName,
-          schema: JSON.stringify(schema, null, 2),
-          context: JSON.stringify(context, null, 2),
-        }
-      );
-      // Save conversion to document
-      await fs.promises.writeFile(
-        path.join(options.output, `${fileName}.ts`),
-        finalContent
+      await Promise.all(
+        ["context", "ldoFactory", "schema", "shapeTypes", "typings"].map(
+          async (templateName) => {
+            const finalContent = await renderFile(
+              path.join(__dirname, "./templates", `${templateName}.ejs`),
+              {
+                typings: typings.typings,
+                fileName,
+                schema: JSON.stringify(schema, null, 2),
+                context: JSON.stringify(context, null, 2),
+              }
+            );
+            // Save conversion to document
+            await fs.promises.writeFile(
+              path.join(options.output, `${fileName}.${templateName}.ts`),
+              prettier.format(finalContent, { parser: "typescript" })
+            );
+          }
+        )
       );
     })
   );
