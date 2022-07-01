@@ -2,6 +2,7 @@
 
 import { program } from "commander";
 import { build } from "./build";
+import { init } from "./init";
 
 program
   .name("LDO-CLI")
@@ -14,5 +15,10 @@ program
   .option("-i, --input <inputPath>", "Provide the input path", "./shapes")
   .option("-o, --output <outputPath>", "Provide the output path", "./ldo")
   .action(build);
+
+program
+  .command("init")
+  .description("Initializes a project for ldo")
+  .action(init);
 
 program.parse();
