@@ -8,7 +8,7 @@ const DEFAULT_SHAPES_FOLDER = "./shapes";
 export async function init() {
   // Install dependencies
   await exec("npm install ldo --save");
-  await exec("npm install ldo-cli --save-dev");
+  await exec("npm install ldo-cli @types/shexj @types/jsonld --save-dev");
 
   // Create "shapes" folder
   await fs.promises.mkdir(DEFAULT_SHAPES_FOLDER);
