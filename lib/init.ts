@@ -4,14 +4,42 @@ import path from "path";
 import { renderFile } from "ejs";
 
 const DEFAULT_SHAPES_FOLDER = "./shapes";
+const DEFAULT_LDO_FOLDER = "./ldo";
+const POTENTIAL_PARENT_DIRECTORIES = ["src", "lib", "bin"];
 
-export async function init() {
+export interface InitOptions {
+  directory?: string;
+}
+
+export async function init(initOptions: InitOptions) {
   // Install dependencies
   await exec("npm install ldo --save");
   await exec("npm install ldo-cli @types/shexj @types/jsonld --save-dev");
 
+  // Find folder to save to
+  let parentDirectory = initOptions.directory;
+  if (!parentDirectory) {
+    parentDirectory = "./";
+    const allDirectories = (
+      await fs.promises.readdir("./", {
+        withFileTypes: true,
+      })
+    ).filter((file) => file.isDirectory());
+    for (let i = 0; i < POTENTIAL_PARENT_DIRECTORIES.length; i++) {
+      if (
+        allDirectories.some(
+          (dir) => dir.name === POTENTIAL_PARENT_DIRECTORIES[i]
+        )
+      ) {
+        parentDirectory = POTENTIAL_PARENT_DIRECTORIES[i];
+        break;
+      }
+    }
+  }
+
   // Create "shapes" folder
-  await fs.promises.mkdir(DEFAULT_SHAPES_FOLDER);
+  const shapesFolderPath = path.join(parentDirectory, DEFAULT_SHAPES_FOLDER);
+  await fs.promises.mkdir(shapesFolderPath);
   const defaultShapePaths = await fs.promises.readdir(
     path.join(__dirname, "./templates/defaultShapes")
   );
@@ -22,7 +50,7 @@ export async function init() {
         {}
       );
       await fs.promises.writeFile(
-        path.join(DEFAULT_SHAPES_FOLDER, `${path.parse(shapePath).name}.shex`),
+        path.join(shapesFolderPath, `${path.parse(shapePath).name}.shex`),
         shapeContent
       );
     })
@@ -36,8 +64,10 @@ export async function init() {
   if (!packageJson.scripts) {
     packageJson.scripts = {};
   }
-  packageJson.scripts["build:ldo"] =
-    "ldo build --input ./shapes --output ./ldo";
+  const ldoFolder = path.join(parentDirectory, DEFAULT_LDO_FOLDER);
+  packageJson.scripts[
+    "build:ldo"
+  ] = `ldo build --input ${shapesFolderPath} --output ${ldoFolder}`;
   await fs.promises.writeFile(
     "./package.json",
     JSON.stringify(packageJson, null, 2)

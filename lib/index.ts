@@ -18,6 +18,7 @@ program
 
 program
   .command("init")
+  .option("-d --directory>", "A parent directory for ldo files")
   .description("Initializes a project for ldo")
   .action(init);
 

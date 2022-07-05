@@ -1,6 +1,6 @@
 {
   "name": "ldo-cli",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A Command Line Interface for Linked Data Objects",
   "main": "./dist/index.js",
   "bin": {
@@ -18,7 +18,8 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "docs": "typedoc",
-    "prepublishOnly": "npm run test && npm run build && npm run docs"
+    "prepublishOnly": "npm run test && npm run build && npm run docs",
+    "build:ldo": "ldo build --input lib/shapes --output lib/ldo"
   },
   "repository": {
     "type": "git",
