@@ -14,7 +14,7 @@ export interface InitOptions {
 export async function init(initOptions: InitOptions) {
   // Install dependencies
   await exec("npm install ldo --save");
-  await exec("npm install ldo-cli @types/shexj@2.1.1 @types/jsonld --save-dev");
+  await exec("npm install ldo-cli @types/shexj @types/jsonld --save-dev");
 
   // Find folder to save to
   let parentDirectory = initOptions.directory;
