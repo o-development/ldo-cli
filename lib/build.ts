@@ -40,7 +40,7 @@ export async function build(options: BuildOptions) {
       // Convert the content to types
       const [typings, context] = await shexjToTypeAndContext(schema);
       await Promise.all(
-        ["context", "ldoFactory", "schema", "shapeTypes", "typings"].map(
+        ["context", "schema", "shapeTypes", "typings"].map(
           async (templateName) => {
             const finalContent = await renderFile(
               path.join(__dirname, "./templates", `${templateName}.ejs`),
