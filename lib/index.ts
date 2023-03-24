@@ -7,7 +7,7 @@ import { init } from "./init";
 program
   .name("LDO-CLI")
   .description("CLI to some JavaScript string utilities")
-  .version("3.0.0");
+  .version("3.0.1");
 
 program
   .command("build")
