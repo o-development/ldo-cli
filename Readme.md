@@ -1,3 +1,5 @@
+> :warning: **This repository is archived**: It's contents have been moved to a new [monorepo](https://github.com/o-development/ldo/).
+
 # LDO-CLI
 
 A command line interface for Linked Data Objects. LDO-CLI builds `.shex` shapes into LDO types.
